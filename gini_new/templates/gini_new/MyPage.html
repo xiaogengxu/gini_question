@@ -1,0 +1,365 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Ideal wealth distribution
+{% endblock %}
+
+{% block content %}
+
+    <!-- In <head> -->
+    <head><link href="{% static 'nouislider.min.css' %}" rel="stylesheet"></head>
+
+    <!-- In <body> -->
+    <script src="{% static 'nouislider.min.js' %}"></script>
+    <script src="{% static 'wNumb.min.js' %}"></script>
+
+    <div type="range" class="noUiSlider" id="slider1"></div>
+    <p>I think that the richest quintile should earn <b><span id="slider1-span"></span>%</b> of the total
+        disposable income.</p>
+    <input type="hidden" name="slider_top20" value="" id="slider_top20"/>
+    <input type="hidden" name="check_slider1" value="" id="id_check_slider1"/>
+
+    <p><input type="checkbox" id="checkbox1"/>&nbsp;&nbsp;Confirm and answer the next slider of second quintile</p>
+
+    <br>
+
+    <div type="range" class="noUiSlider" id="slider2"></div>
+    <p>I think that the second richest quintile should earn <b><span id="slider2-span"></span>%</b> of the total
+        disposable income.</p>
+    <input type="hidden" name="slider_second20" value="" id="slider_second20"/>
+    <input type="hidden" name="check_slider2" value="" id="id_check_slider2"/>
+
+    <p><input type="checkbox" id="checkbox2"/>&nbsp;&nbsp;Confirm and answer the next slider of third quintile</p>
+
+    <br>
+
+    <div type="range" class="noUiSlider" id="slider3"></div>
+    <p>I think that the middle quintile should earn <b><span id="slider3-span"></span>%</b> of the total
+        disposable income.</p>
+    <input type="hidden" name="slider_third20" value="" id="slider_third20"/>
+    <input type="hidden" name="check_slider3" value="" id="id_check_slider3"/>
+
+    <p><input type="checkbox" id="checkbox3"/>&nbsp;&nbsp;Confirm and answer the next slider of fourth
+        and fifth quintile</p>
+
+    <br>
+
+    <div type="range" class="noUiSlider" id="slider4"></div>
+    <p>I think that the fourth quintile should earn <b><span id="slider4-span"></span>%</b> of the total
+        disposable income.</p>
+    <p>I think that the bottom quintile should earn <b><span id="slider5-span"></span>%</b> of the total
+        disposable income.</p>
+    <input type="hidden" name="slider_fourth20" value="" id="slider_fourth20"/>
+    <input type="hidden" name="check_slider4" value="" id="id_check_slider4"/>
+
+    <br>
+
+    <div class="noUiSlider">
+    <script>
+
+   var slider1 = document.getElementById('slider1');
+   var slider2 = document.getElementById('slider2');
+   var slider3 = document.getElementById('slider3');
+   var slider4 = document.getElementById('slider4');
+
+   var slider1Value = document.getElementById('slider1-span');
+   var slider2Value = document.getElementById('slider2-span');
+   var slider3Value = document.getElementById('slider3-span');
+   var slider4Value = document.getElementById('slider4-span');
+   var slider5Value = document.getElementById('slider5-span');
+
+   var slider_top20_output = document.getElementById('slider_top20');
+   var slider_second20_output = document.getElementById('slider_second20');
+   var slider_third20_output = document.getElementById('slider_third20');
+   var slider_fourth20_output = document.getElementById('slider_fourth20');
+
+   var slider1_check_output = document.getElementById('id_check_slider1');
+   var slider2_check_output = document.getElementById('id_check_slider2');
+   var slider3_check_output = document.getElementById('id_check_slider3');
+   var slider4_check_output = document.getElementById('id_check_slider4');
+
+   var checkbox1 = document.getElementById('checkbox1');
+   var checkbox2 = document.getElementById('checkbox2');
+   var checkbox3 = document.getElementById('checkbox3');
+
+    // Initializing the sliders
+    noUiSlider.create(slider1, {
+    start: 20,
+    step: 1,
+    padding: [20, 0],
+    format: wNumb({decimals: 0}),
+    connect: [true, false],
+    // Disable animation on value-setting,
+    // so the sliders respond immediately.
+    animate: false,
+    range: {
+        min: 0,
+        max: 100
+    },
+    });
+
+    noUiSlider.create(slider2, {
+        start: 40,
+        step: 1,
+        padding: [40, 0],
+        connect: [true, false],
+        animate: false,
+        range: {
+            min: 0,
+            max: 100
+        },
+    });
+
+    // Set slider 2 as disabled at the beginning
+    slider2.setAttribute('disabled', true);
+
+    noUiSlider.create(slider3, {
+        start: 60,
+        step: 1,
+        padding: [60, 0],
+        connect: [true, false],
+        animate: false,
+        range: {
+            min: 0,
+            max: 100
+        }
+    });
+
+    // Set slider 3 as disabled at the beginning
+    slider3.setAttribute('disabled', true);
+
+    noUiSlider.create(slider4, {
+        start: 80,
+        step: 1,
+        padding: [80, 0],
+        connect: [true, false],
+        animate: false,
+        range: {
+            min: 0,
+            max: 100
+        }
+    });
+
+    // Set slider 4 as disabled at the beginning
+    slider4.setAttribute('disabled', true);
+
+   function toggle(element1, element2, element3, element4) {
+       // If the checkbox is checked, disable slider 1 and enable slider 2 and 3.
+       // Otherwise, keep slider 1 active and slider 2 and 3 are disabled.
+       if (this.checked) {
+           element1.setAttribute('disabled', true);
+           element2.removeAttribute('disabled');
+           element3.setAttribute('disabled', true);
+           element4.setAttribute('disabled', true);
+           document.getElementById('checkbox2').checked = false;
+           document.getElementById('checkbox3').checked = false;
+       }
+       else {
+           element1.removeAttribute('disabled');
+           element2.setAttribute('disabled', true);
+           element3.setAttribute('disabled', true);
+           element4.setAttribute('disabled', true);
+           document.getElementById('checkbox2').checked = false;
+           document.getElementById('checkbox3').checked = false;
+       }
+   }
+
+   function toggle_2(element1, element2, element3) {
+       // If the checkbox is checked, disable slider 2 and enable slider 3 and 4.
+       // Otherwise, keep slider 2 active and slider 3 and 4 are disabled.
+       if (this.checked) {
+           element1.setAttribute('disabled', true);
+           element2.removeAttribute('disabled');
+           element3.setAttribute('disabled', true);
+           document.getElementById('checkbox3').checked = false;
+       }
+       else {
+           element1.removeAttribute('disabled');
+           element2.setAttribute('disabled', true);
+           element3.setAttribute('disabled', true);
+           document.getElementById('checkbox3').checked = false;
+       }
+   }
+
+   function toggle_3(element1, element2) {
+       // If the checkbox is checked, disable slider 3 and enable slider 4.
+       // Otherwise, keep slider 3 active and slider 4 disabled.
+       if (this.checked) {
+           element1.setAttribute('disabled', true);
+           element2.removeAttribute('disabled');
+       }
+       else {
+           element1.removeAttribute('disabled');
+           element2.setAttribute('disabled', true);
+       }
+   }
+
+   // Once checkbox1 is checked, execute the function toggle
+   checkbox1.addEventListener('click', function () {
+       toggle.call(this, slider1, slider2, slider3, slider4);
+   });
+
+   // Once checkbox2 is checked, execute the function toggle_2
+   checkbox2.addEventListener('click', function () {
+       toggle_2.call(this, slider2, slider3, slider4);
+   });
+
+   // Once checkbox3 is checked, execute the function toggle_3
+   checkbox3.addEventListener('click', function () {
+       toggle_3.call(this, slider3, slider4);
+   });
+
+   // Change the paddings of slider 2 as slider 1 is being moved
+   slider2.noUiSlider.on('slide', function () {
+       slider1.noUiSlider.on('update', function (values, handle) {
+           slider2_padding1 = Math.round(3/4*values[handle]+25);
+           slider2_padding2 = 100-2*values[handle];
+       });
+       slider2.noUiSlider.updateOptions({
+           padding: [slider2_padding1, slider2_padding2],
+       });
+   });
+
+   // Change the paddings of slider 3 as slider 1 and slider 2 are being moved
+   slider3.noUiSlider.on('slide', function (values, handle) {
+       slider1.noUiSlider.on('update', function (values, handle) {
+           slider1_update_padding = values[handle];
+       });
+       slider2.noUiSlider.on('update', function (values, handle) {
+           slider2_update_padding = values[handle];
+       });
+       slider3_padding1 = Math.round(100/3+2/3*slider2_update_padding);
+       slider3_padding2 = 100-(2*slider2_update_padding-slider1_update_padding);
+       slider3.noUiSlider.updateOptions({
+           padding: [slider3_padding1, slider3_padding2],
+       });
+   });
+
+   // Change the paddings of slider 4 as slider 2 and slider 3 are being moved
+   slider4.noUiSlider.on('slide', function (values, handle) {
+       slider2.noUiSlider.on('update', function (values, handle) {
+           slider2_update_padding = values[handle];
+       });
+       slider3.noUiSlider.on('update', function (values, handle) {
+           slider3_update_padding = values[handle];
+       });
+       slider4_padding1 = Math.round(50+0.5*slider3_update_padding);
+       slider4_padding2 = 100-(2*slider3_update_padding-slider2_update_padding);
+       slider4.noUiSlider.updateOptions({
+           padding: [slider4_padding1, slider4_padding2],
+       });
+   });
+
+    // Update to show the percentage of income of top 20%
+    slider1.noUiSlider.on('update', function (values, handle) {
+        slider1Value.innerHTML = values[handle];
+    });
+
+    // Update to show the percentage of income of second 20%
+    slider2.noUiSlider.on('update', function (values, handle) {
+        slider1.noUiSlider.on('update', function (values, handle) {
+            slider1_update = values[handle];
+        });
+        slider2Value.innerHTML = values[handle] - slider1_update;
+    });
+
+    // Update to show the percentage of income of third 20%
+    slider3.noUiSlider.on('update', function (values, handle) {
+        slider2.noUiSlider.on('update', function (values, handle) {
+            slider2_update = values[handle];
+        });
+        slider3Value.innerHTML = values[handle] - slider2_update;
+    });
+
+    // Update to show the percentage of income of fourth 20%
+    slider4.noUiSlider.on('update', function (values, handle) {
+        slider3.noUiSlider.on('update', function (values, handle) {
+            slider3_update = values[handle];
+        });
+        slider4Value.innerHTML = values[handle] - slider3_update;
+        slider5Value.innerHTML = 100 - values[handle];
+    });
+
+    // // Change slider 2 with slider 1
+    // slider1.noUiSlider.on('slide', function (values, handle) {
+    //     value = values[handle] + 20;
+    // });
+    // slider2.noUiSlider.setHandle(0, value, true, true);
+
+    // Update the input formfield values with the slider values
+    slider1.noUiSlider.on('update', function (values, handle) {
+        slider_top20_output.value = values[handle];
+    });
+
+    slider2.noUiSlider.on('update', function (values, handle) {
+        slider_second20_output.value = values[handle];
+    });
+
+    slider3.noUiSlider.on('update', function (values, handle) {
+        slider_third20_output.value = values[handle];
+    });
+
+    slider4.noUiSlider.on('update', function (values, handle) {
+        slider_fourth20_output.value = values[handle];
+    });
+
+    // Update the value of check_slider# to be 1 if the slider is touched
+   slider1.noUiSlider.on('start', function () {
+       slider1_check_output.value = 1;
+   });
+
+   slider2.noUiSlider.on('start', function () {
+       slider2_check_output.value = 1;
+   });
+
+   slider3.noUiSlider.on('start', function () {
+       slider3_check_output.value = 1;
+   });
+
+   slider4.noUiSlider.on('start', function () {
+       slider4_check_output.value = 1;
+   });
+
+   </script>
+    </div>
+
+    <style>
+        input[type=checkbox] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(1.4); /* IE */
+            -moz-transform: scale(1.4); /* FF */
+            -webkit-transform: scale(1.4); /* Safari and Chrome */
+            -o-transform: scale(1.4); /* Opera */
+            transform: scale(1.4);
+            padding: 10px;
+        }
+    </style>
+
+    {% if form.check_slider1.errors %}
+    <div class="alert alert-danger" role="alert">
+        <h6 class="alert-heading">{{ form.check_slider1.errors }}</h6>
+    </div>
+    {% endif %}
+
+    {% if form.check_slider2.errors %}
+    <div class="alert alert-danger" role="alert">
+        <h6 class="alert-heading">{{ form.check_slider2.errors }}</h6>
+    </div>
+    {% endif %}
+
+    {% if form.check_slider3.errors %}
+    <div class="alert alert-danger" role="alert">
+        <h6 class="alert-heading">{{ form.check_slider3.errors }}</h6>
+    </div>
+    {% endif %}
+
+    {% if form.check_slider4.errors %}
+    <div class="alert alert-danger" role="alert">
+        <h6 class="alert-heading">{{ form.check_slider4.errors }}</h6>
+    </div>
+    {% endif %}
+
+    {% next_button %}
+
+{% endblock %}
